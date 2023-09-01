@@ -76,3 +76,27 @@ exports.updateMovieToTheare= async function(req,res){
         return res.status(500).send({message:"Internal Server Error "+e.message});
     }
 }
+
+
+exports.getTheatre= async function(req,res){
+
+    const id=req.params.id;
+
+        try{
+    const theatre= await theatreModel.findById(id).populate("movies");
+
+    if(!theatre){
+            return res.status(404).send({message:"Theatre not found"});
+        }
+
+        return res.send(theatre);
+    }
+     catch(e){
+        return res.status(500).send({message:"Internal Server Error "+e.message});
+    }
+}
+
+exports.checkIfMovieInTheatre = async function(req,res){
+       const {movie, theatre} = req.metaData;
+        return res.status(200).send({running: theatre.movies.includes(movie._id)});
+}

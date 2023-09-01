@@ -12,7 +12,21 @@ const releaseStatusTypes={
     blocked:"BLOCKED"
 }
 
+const userTypes={
+    customer:"CUSTOMER",
+    client:"CLIENT",
+    admin:"ADMIN"
+}
+
+const userStatus={
+    pending:"PENDING",
+    blocked:"BLOCKED",
+    approved:"APPROVED"
+}
+
 module.exports={
     languageTypes,
-    releaseStatusTypes
+    releaseStatusTypes,
+    userTypes,
+    userStatus
 }
