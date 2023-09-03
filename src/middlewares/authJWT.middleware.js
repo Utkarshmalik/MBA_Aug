@@ -2,10 +2,11 @@ const jwt = require("jsonwebtoken");
 const { SECRET } = require("../configs/server.configs");
 const { userStatus, userTypes } = require("../utils/constant");
 const userModel = require("../models/user.model");
+const bookingModel = require("../models/booking.model");
 
 
 
-const verifyToken = (req,res,next)=>{
+const verifyToken = async (req,res,next)=>{
 
     let token = req.headers['x-access-token'];
 
@@ -13,13 +14,16 @@ const verifyToken = (req,res,next)=>{
         return res.status(403).send({message:"No Token Provided"});
     }
     
-    jwt.verify(token, SECRET, (err,payload)=>{
+    jwt.verify(token, SECRET, async (err,payload)=>{
 
         if(err){
             return res.status(401).send({message:"Invalid access token Token provided"});
         }
 
         req.userId = payload.userId;
+
+    const user = await userModel.findOne({userId:payload.userId});
+    req.user=user;
 
         next();
     })
@@ -47,7 +51,31 @@ const isAdmin = async (req,res,next)=>{
 
 }
 
+
+const isAdminOrSelfBooking = async (req,res,next)=>{
+
+        const {userId} = req;
+        const bookingId = req.params.id;
+
+            try{
+        const user = await userModel.findOne({userId});
+        const booking  = await bookingModel.findById(bookingId);
+
+        if(user.userType===userTypes.admin ||  (JSON.stringify(user._id)===JSON.stringify(booking.user))){
+            next();
+           return;
+        }
+
+        return res.status(403).send({message:"This booking doesnt belong to you "});
+
+    }catch(err){
+            return res.status(500).send({message:"Internal Server Error"});
+    }
+
+}
+
 module.exports={
     verifyToken,
-    isAdmin
+    isAdmin,
+    isAdminOrSelfBooking
 }
