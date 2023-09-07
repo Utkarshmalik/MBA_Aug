@@ -24,6 +24,7 @@ require("./src/routes/movie.route")(app);
 require("./src/routes/theatre.routes")(app);
 require("./src/routes/auth.routes")(app);
 require("./src/routes/booking.routes")(app);
+require("./src/routes/payment.routes")(app);
 
 
 
