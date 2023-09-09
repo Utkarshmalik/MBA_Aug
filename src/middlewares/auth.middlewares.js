@@ -29,7 +29,7 @@ const verifySignUpRequest=async (req,res,next)=>{
     console.log(user);
 
     if(user.length){
-       return res.status(400).send({message:"EmailId or UserId already exists"}); 
+    return res.status(400).send({message:"EmailId or UserId already exists"}); 
     }
     }
     catch(err){

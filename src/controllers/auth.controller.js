@@ -3,6 +3,8 @@ const { userTypes, userStatus } = require("../utils/constant");
 const userModel = require("../models/user.model");
 const jwt= require("jsonwebtoken");
 const { SECRET } = require("../configs/server.configs");
+const { sendEmail } = require("../utils/NotificationUtils");
+const { registerUser } = require("../scripts/emailScripts");
 
 exports.signUp=async (req,res)=>{
 
@@ -25,6 +27,10 @@ exports.signUp=async (req,res)=>{
     try{
 
         const user = await userModel.create(userObj);
+
+        const {subject,text,html} = registerUser(user);
+
+        sendEmail([user.email],subject,html,text);
 
         return res.status(201).send(user);
         

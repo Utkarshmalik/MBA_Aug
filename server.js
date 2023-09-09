@@ -6,9 +6,11 @@ const serverConfigs = require("./src/configs/server.configs");
 const bodyParser = require("body-parser");
 const userModel = require("./src/models/user.model");
 const bcrypt = require("bcrypt");
+var cors = require('cors')
 
 const app = express();
 
+app.use(cors())
 
 
 mongoose.connect(dbConfigs.DB_URL)
